@@ -20,7 +20,10 @@ NOTION_HEADERS = {
 
 def append_to_notion(text: str):
     now = datetime.now().strftime("%d.%m.%Y %H:%M")
-    url = f"https://api.notion.com/v1/blocks/{NOTION_PAGE_ID}/children"
+    page_id = NOTION_PAGE_ID
+    url = f"https://api.notion.com/v1/blocks/{page_id}/children"
+    logger.info(f"NOTION_PAGE_ID raw value: '{page_id}'")
+    logger.info(f"Request URL: {url}")
     data = {
         "children": [{
             "object": "block",
