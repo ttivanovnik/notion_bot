@@ -12,11 +12,16 @@ NOTION_PAGE_ID = os.environ.get("NOTION_PAGE_ID")
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+logger.info(f"=== STARTUP CHECK ===")
+logger.info(f"NOTION_PAGE_ID = '{NOTION_PAGE_ID}'")
+logger.info(f"NOTION_TOKEN starts with: '{str(NOTION_TOKEN)[:10]}...'")
+
 NOTION_HEADERS = {
     "Authorization": f"Bearer {NOTION_TOKEN}",
     "Content-Type": "application/json",
     "Notion-Version": "2022-06-28"
 }
+
 
 def append_to_notion(text: str):
     now = datetime.now().strftime("%d.%m.%Y %H:%M")
@@ -40,6 +45,7 @@ def append_to_notion(text: str):
     logger.info(f"Notion response: {response.status_code} — {response.text}")
     return response.status_code == 200
 
+
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     logger.info(f"Получено сообщение: {text}")
@@ -49,8 +55,10 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text("❌ Ошибка при сохранении. Проверь токены.")
 
+
 async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("🎤 Голосовые пока не поддерживаются. Отправь текстом.")
+
 
 if __name__ == "__main__":
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
